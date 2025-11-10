@@ -1,0 +1,11 @@
+# requirements.txt
+
+# Scraping
+selenium
+webdriver-manager
+playwright
+
+# Análisis de datos
+pandas
+numpy
+matplotlib
