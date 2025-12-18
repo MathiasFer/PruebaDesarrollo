@@ -14,29 +14,36 @@ class MainApp:
         self.password = password
         self.target_account = target_account
         self.limit = limit
-        self.followers_list_csv = f"{target_account}_followers_list.csv"
-        self.output_counts_csv = f"{target_account}_follower_counts.csv"
+
+        # 🔹 Nombres de archivos (texto)
+        self.followers_list_csv = f"{target_account}_following_list.csv"
+        self.output_counts_csv = f"{target_account}_following_counts.csv"
         self.graph_filename = f"{target_account}_benford_analysis.png"
-        print(f"Iniciando análisis de Benford para: {target_account}")
+
+        print(f"Iniciando análisis de Benford para los SEGUIDOS de: {target_account}")
 
     # Fase 1: descarga de nombres de usuario
     def _run_phase_1_download(self):
-        print("\n--- Fase 1: Descarga de nombres de usuario ---")
+        print("\n--- Fase 1: Descarga de usuarios seguidos ---")
         downloader = FollowersDownloader(self.username, self.password)
         try:
-            downloader.download_and_save_followers(self.target_account, self.limit, self.followers_list_csv)
+            downloader.download_and_save_followers(
+                self.target_account,
+                self.limit,
+                self.followers_list_csv
+            )
         except Exception as e:
             print(f"Error en la Fase 1: {e}")
         finally:
             downloader.close_driver()
 
-    # Fase 2: recopilación de conteos de seguidores
+    # Fase 2: recopilación de conteos
     def _run_phase_2_scrape_counts(self):
         if not os.path.exists(self.followers_list_csv):
             print(f"\nEl archivo '{self.followers_list_csv}' no fue encontrado. Ejecuta la Fase 1 primero.")
             return
 
-        print("\n--- Fase 2: Recopilación de conteos de seguidores ---")
+        print("\n--- Fase 2: Recopilación de conteo de seguidores de los seguidos ---")
         scraper = ProfileScraper(self.username, self.password)
         usernames_to_count = scraper.read_usernames_from_csv(self.followers_list_csv)
 
@@ -54,7 +61,7 @@ class MainApp:
             print(f"\nEl archivo '{self.output_counts_csv}' no fue encontrado. Ejecuta la Fase 2 primero.")
             return
 
-        print("\n--- Fase 3: Limpieza y análisis de Benford ---")
+        print("\n--- Fase 3: Limpieza y análisis de Benford (seguidos) ---")
         analyzer = DataAnalyzer(self.output_counts_csv)
         analyzer.clean_and_prepare_data()
         analyzer.analyze_and_plot_first_digit(self.graph_filename)
@@ -76,16 +83,16 @@ class MainApp:
 
 
 def display_menu():
-    print("\n" + "=" * 40)
-    print("ANALIZADOR DE SEGUIDORES (BENFORD)")
-    print("=" * 40)
+    print("\n" + "=" * 45)
+    print("ANALIZADOR DE SEGUIDOS (BENFORD)")
+    print("=" * 45)
     print("Selecciona la fase a ejecutar:")
-    print("  [1] FASE 1: Recolectar nombres de usuario")
-    print("  [2] FASE 2: Recolectar conteo de seguidores (requiere Fase 1)")
-    print("  [3] FASE 3: Análisis de Benford y gráfico (requiere Fase 2)")
-    print("  [0] EJECUTAR TODO (1 -> 2 -> 3)")
+    print("  [1] FASE 1: Recolectar usuarios seguidos")
+    print("  [2] FASE 2: Recolectar conteo de seguidores de los seguidos")
+    print("  [3] FASE 3: Análisis de Benford y gráfico")
+    print("  [0] EJECUTAR TODO (1 → 2 → 3)")
     print("  [4] Salir")
-    print("=" * 40)
+    print("=" * 45)
 
     while True:
         try:
