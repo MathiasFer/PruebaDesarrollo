@@ -69,7 +69,7 @@ class FollowersDownloader:
 
         try:
             # Clic en el botón de iniciar sesión
-            submit_btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[./div[text()='Iniciar sesión']]")))
+            submit_btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[./div[text()='Iniciar']]")))
             submit_btn.click()
         except Exception:
             print("No se pudo hacer clic en el botón de login.")
@@ -151,9 +151,9 @@ class FollowersDownloader:
 
         try:
             # Abre el modal de seguidores
-            seguidores_link_xpath = "//a[contains(@href, '/followers/')]"
-            seguidores_link = wait.until(EC.element_to_be_clickable((By.XPATH, seguidores_link_xpath)))
-            self.driver.execute_script("arguments[0].click();", seguidores_link)
+            seguidos_link_xpath = "//a[contains(@href, '/followed/')]"
+            seguidos_link = wait.until(EC.element_to_be_clickable((By.XPATH, seguidos_link_xpath)))
+            self.driver.execute_script("arguments[0].click();", seguidos_link)
             print("Modal de seguidores abierto.")
             time.sleep(3)
 
